@@ -1,0 +1,152 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Employee {
+    private String name;
+    private int id;
+    private double hourlyRate;
+    private double hoursWorked;
+    
+    public Employee(String name, int id, double hourlyRate) {
+        this.name = name;
+        this.id = id;
+        this.hourlyRate = hourlyRate;
+        this.hoursWorked = 0;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public double getHourlyRate() {
+        return hourlyRate;
+    }
+    
+    public double getHoursWorked() {
+        return hoursWorked;
+    }
+    
+    public void addHoursWorked(double hours) {
+        this.hoursWorked += hours;
+    }
+    
+    public double computeSalary() {
+        return hourlyRate * hoursWorked;
+    }
+    
+    public void displayEmployeeInfo() {
+        System.out.println("ID: " + id);
+        System.out.println("Name: " + name);
+        System.out.println("Hourly Rate: $" + hourlyRate);
+        System.out.println("Hours Worked: " + hoursWorked);
+        System.out.println("Salary: $" + computeSalary());
+    }
+}
+
+public class EmployeeSalarySystem {
+    private static ArrayList<Employee> employees = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\nEmployee Salary System Menu:");
+            System.out.println("1. Add Employee");
+            System.out.println("2. Update Hours Worked");
+            System.out.println("3. Compute Salary");
+            System.out.println("4. Display Employee Information");
+            System.out.println("5. Exit");
+            System.out.print("Select an option: ");
+            
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    addEmployee();
+                    break;
+                case 2:
+                    updateHoursWorked();
+                    break;
+                case 3:
+                    computeSalary();
+                    break;
+                case 4:
+                    displayEmployeeInformation();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid option! Please try again.");
+            }
+        }
+    }
+    
+    private static void addEmployee() {
+        System.out.print("Enter employee ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        System.out.print("Enter employee name: ");
+        String name = scanner.nextLine();
+        
+        System.out.print("Enter hourly rate: ");
+        double hourlyRate = scanner.nextDouble();
+        
+        Employee employee = new Employee(name, id, hourlyRate);
+        employees.add(employee);
+        
+        System.out.println("Employee added successfully.");
+    }
+    
+    private static void updateHoursWorked() {
+        System.out.print("Enter employee ID: ");
+        int id = scanner.nextInt();
+        
+        Employee employee = findEmployeeById(id);
+        if (employee != null) {
+            System.out.print("Enter hours worked: ");
+            double hours = scanner.nextDouble();
+            employee.addHoursWorked(hours);
+            System.out.println("Hours worked updated successfully.");
+        } else {
+            System.out.println("Employee not found.");
+        }
+    }
+    
+    private static void computeSalary() {
+        System.out.print("Enter employee ID: ");
+        int id = scanner.nextInt();
+        
+        Employee employee = findEmployeeById(id);
+        if (employee != null) {
+            double salary = employee.computeSalary();
+            System.out.println("Computed Salary: $" + salary);
+        } else {
+            System.out.println("Employee not found.");
+        }
+    }
+    
+    private static void displayEmployeeInformation() {
+        if (employees.isEmpty()) {
+            System.out.println("No employees found.");
+            return;
+        }
+        
+        for (Employee employee : employees) {
+            employee.displayEmployeeInfo();
+            System.out.println("-----------------------");
+        }
+    }
+    
+    private static Employee findEmployeeById(int id) {
+        for (Employee employee : employees) {
+            if (employee.getId() == id) {
+                return employee;
+            }
+        }
+        return null;
+    }
+}
